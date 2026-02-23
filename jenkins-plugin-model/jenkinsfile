@@ -13,8 +13,8 @@ pipeline {
                     echo "Build Number: $buildNumber"
 
                     // Use them in shell commands
-                    sh 'sudo docker --version'
-                    sh 'sudo dotnet --info'
+                    sh 'docker --version'
+                    sh 'dotnet --info'
                 }
             }
         }
@@ -23,11 +23,11 @@ pipeline {
             steps {
                 script {
                     // Clone the Git repository's master branch
-                    def gitRepoUrl = 'https://github.com/anshulc55/Jenkins_Upgradev3.git'
+                    def gitRepoUrl = 'git@github.com:gruja96/Jenkins_Upgradev3.git'
 
                     checkout([$class: 'GitSCM', 
                         branches: [[name: '*/master']], 
-                        userRemoteConfigs: [[url: gitRepoUrl]], 
+                        userRemoteConfigs: [[credentialsId: "github.com-sshPrivate", url: gitRepoUrl]],
                         extensions: [[$class: 'CleanBeforeCheckout'], [$class: 'CloneOption', noTags: false, shallow: true, depth: 1]]
                     ])
                 }
@@ -58,7 +58,7 @@ pipeline {
                     echo "Job Name: $jobName"
                     echo "Build Number: $buildNumber"
                 
-                withCredentials([usernamePassword(credentialsId: '1bb08ca6-f3cb-4ec7-953f-c3f7a93401ac', usernameVariable: 'DOCKER_HUB_USER', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {                      
+                withCredentials([usernamePassword(credentialsId: 'docker_gruja96', usernameVariable: 'DOCKER_HUB_USER', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {                      
                     sh "chmod +x ./jenkins-plugin-model/ci/04-push.sh"
                     sh "./jenkins-plugin-model/ci/04-push.sh $buildNumber"
                 }
