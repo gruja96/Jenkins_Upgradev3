@@ -5,7 +5,7 @@ if [ -z ${DOCKER_HUB_USER+x} ]
 then 
     echo 'Skipping login - credentials not set' 
 else 
-    docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
+    echo "$DOCKER_HUB_PASSWORD" | docker login -u $DOCKER_HUB_USER --password-stdin
 fi
 
-docker push anshuldevops/jenkins-demo2:$1
+docker push gruja96/jenkins_groovy_job:$1
