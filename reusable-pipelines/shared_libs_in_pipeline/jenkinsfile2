@@ -1,16 +1,20 @@
-library identifier: 'Jenkins_Pipeline_Shared_Libs@main',
-        retriever: modernSCM([
-            $class: 'GitSCMSource',
-            remote: 'git@github.com:gruja96/Jenkins_Pipeline_Shared_Libs.git',
-            credentialsId: 'uic21507'
-        ])
-
 pipeline {
     agent any
+
+    parameters {
+        string(name: 'LIB_BRANCH', defaultValue: 'main')
+    }
+
     stages {
         stage('Audit tools') {
             steps {
-                auditTools2 message: 'This is demo 2 from Job 2'
+                script {
+                    // Load shared library dynamically
+                    library("TestLib@${params.LIB_BRANCH}")
+
+                    // Now call the step from the library
+                    auditTools2("This is demo 2 from Job 2")
+                }
             }
         }
     }
